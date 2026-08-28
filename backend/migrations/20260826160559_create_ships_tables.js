@@ -14,6 +14,7 @@ exports.up = async function(knex) {
     table.integer('efficiency');
     table.integer('baseHealth');
     table.string('typeID', 12).notNullable();
+    table.text('image');
   });
 
   await knex.schema.createTable('ship_type', table => {

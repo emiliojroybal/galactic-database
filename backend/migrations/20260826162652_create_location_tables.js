@@ -16,6 +16,7 @@ exports.up = async function(knex) {
     table.float('locationY').notNullable().defaultTo(0);
     table.string('controllingFactionID', 12).notNullable();
     table.string('resourceIDs');
+    table.text('image');
   })
 };
 

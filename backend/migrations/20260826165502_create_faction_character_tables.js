@@ -8,11 +8,13 @@ exports.up = async function(knex) {
     table.string('name').notNullable();
     table.string('allyFactionIDs');
     table.string('enemyFactionIDs');
+    table.text('image');
   });
 
   await knex.schema.createTable('species', table => {
     table.string('id', 12).primary();
     table.string('name').notNullable();
+    table.text('image');
   });
 
   await knex.schema.createTable('character', table => {
@@ -20,6 +22,7 @@ exports.up = async function(knex) {
     table.string('name').notNullable();
     table.string('factionIDs');
     table.string('speciesID').notNullable();
+    table.text('image');
   });
 
 };

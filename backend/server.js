@@ -4,6 +4,7 @@ const cors = require('cors');
 const knex = require('knex')(require('./knexfile')[process.env.NODE_ENV || 'development']);
 require('dotenv').config();
 const { generateID } = require('./functions');
+const fs = require('fs/promises');
 
 const PORT = process.env.PORT;
 
@@ -43,20 +44,31 @@ app.post("/:dataType", async (req, res) => {
     const body = req.body;
     const responses = [];
     const typePrefix = await knex("type_prefix").select("prefix").where({type: dataType}).first();
-    for (let element of body) {
-        const newID = generateID(typePrefix.prefix);
-        const insertion = {
-            ...element,
-            id: newID,
-        }
+    const newID = generateID(typePrefix.prefix);
 
+    if (body.image) {
+        const newImageID = generateID("IMG");
         try {
-            console.log(`Trying to insert ${insertion.name} to ${dataType}`);
-            await knex(dataType).insert(insertion);
-            responses.push(`Successfully inserted ${insertion.name} with ID ${insertion.id}\n`)
+            console.log(body.image);
+            await fs.writeFile(`data/images/${newImageID}`, body.image);
+            console.log("Successfully wrote file to " + `data/images/${newImageID}`);
         } catch (err) {
-            responses.push(err + '\n');
+            console.log(err);
         }
+        body.image = newImageID;
+    }
+    
+    const insertion = {
+        ...body,
+        id: newID,
+    }
+
+    try {
+        console.log(`Trying to insert ${insertion.name} to ${dataType}`);
+        await knex(dataType).insert(insertion);
+        responses.push(`Successfully inserted ${insertion.name} with ID ${insertion.id}\n`)
+    } catch (err) {
+        responses.push(err + '\n');
     }
 
     res.status(200).json({message: responses})
@@ -69,12 +81,13 @@ app.patch("/:dataType/:id", async (req, res) => {
     console.log(`Trying to patch ${id} in ${dataType}`);
 
     knex(dataType).where({id: id}).update(body)
-    .then(data => res.status(200).json({message: `Successfully updated ${id}`}))
+    .then(data => res.status(200).json({message: `Successfully updated ${id}`, data: body}))
     .catch(err => res.status(400).json({message: err}));
 })
 
 app.delete("/:dataType/:id", async (req, res) => {
     const { dataType, id } = req.params;
+    console.log(`Trying to delete ${id} from ${dataType}`);
     knex(dataType).where({id: id}).delete()
     .then(data => res.status(200).json({message: `Successfully deleted ${id} from ${dataType}`}))
     .catch(err => res.status(400).json({message: err}));

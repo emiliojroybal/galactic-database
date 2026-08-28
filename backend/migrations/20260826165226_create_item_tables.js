@@ -12,6 +12,7 @@ exports.up = async function(knex) {
     table.string('id', 12).primary();
     table.string('name').notNullable();
     table.string('typeID', 12).notNullable();
+    table.text('image');
   })
 };
 

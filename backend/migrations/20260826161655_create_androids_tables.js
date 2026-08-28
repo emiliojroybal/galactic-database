@@ -14,6 +14,7 @@ exports.up = async function(knex) {
     table.string('typeID', 12).notNullable();
     table.integer('baseEfficiency').notNullable();
     table.integer('baseHealth').notNullable();
+    table.text('image');
   });
 };
 
