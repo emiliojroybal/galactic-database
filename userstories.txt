@@ -1,0 +1,7 @@
+As a sci-fi game developer,
+I want to create an organized collection of game object data
+So that I can easily modify and import it into my game.
+
+As a worldbuilder,
+I want to be able to input different types of information about my world
+So that I can create a more organized world.
