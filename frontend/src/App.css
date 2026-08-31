@@ -53,10 +53,6 @@
   border-bottom: 1rem solid rgb(0, 145, 235);
 }
 
-.window-header-close-button:hover {
-  background-color: rgb(255, 153, 153);
-}
-
 .types-window {
   position: relative;
   display: flex;
@@ -117,7 +113,12 @@
   font-size: 1.3rem;
 }
 
-.sidebar-list-element:hover, .display-header-button:hover {
+.sidebar-list-element:hover, .display-header-button:hover, .editor-submit-button:hover {
+  background-color: #9CA3DB;
+  color: black;
+}
+
+.sidebar-list-element[data-selected=true] {
   background-color: white;
   color: black;
 }
@@ -141,9 +142,9 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 5%;
-  background-color: rgb(46, 46, 46);
-  height: auto;
-  width: 25%;
+  background-color: black;
+  border: 1rem solid rgb(0, 145, 235);
+  border-radius: 1rem;
 }
 
 .popup-header {
@@ -163,8 +164,68 @@
 
 .display-window {
   position: relative;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
   padding: 1rem;
   border-top-left-radius: 3rem;
+  align-items: center;
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  margin: 1rem;
+}
+
+.editor-inputs {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  margin: 1rem;
+  column-gap: 1rem;
+  align-items: center;
+}
+
+.editor-input {
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
+
+.editor-submit-button {
+  align-items: center;
+  margin-right: 5rem;
+  margin-left: 5rem;
+  background-color: #3423a6;
+  color: white;
+  border: 0;
+  border-radius: 1rem;
+}
+
+.editor-delete-button {
+  background-color: red;
+  color: white;
+  border: 0;
+  border-radius: 1rem;
+  font-size: 1rem;
+  padding: 0.3rem;
+}
+
+.editor-delete-button:hover {
+  background-color: rgb(255, 153, 153);
+  color: black;
+}
+
+.editor-image-input {
+  background-color: #3423a6;
+
+}
+
+.editor-preview-image {
+  height: 20rem;
+  width: auto;
 }

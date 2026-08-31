@@ -11,7 +11,7 @@ exports.up = async function(knex) {
   await knex.schema.createTable('ship_system', table => {
     table.string('id', 12).primary();
     table.string('name').notNullable();
-    table.integer('efficiency');
+    table.integer('baseEfficiency');
     table.integer('baseHealth');
     table.string('typeID', 12).notNullable();
     table.text('image');
@@ -26,7 +26,6 @@ exports.up = async function(knex) {
     table.string('id', 12).primary();
     table.string('name').notNullable();
     table.string('typeID', 12).notNullable();
-    table.string('initialSystemIDs').notNullable();
     table.string('controllingFactionID', 12).notNullable();
     table.integer('baseIntegrity');
     table.integer('systemSlots');

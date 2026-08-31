@@ -5,6 +5,11 @@ const knex = require('knex')(require('./knexfile')[process.env.NODE_ENV || 'deve
 require('dotenv').config();
 const { generateID } = require('./functions');
 const fs = require('fs/promises');
+const multer = require('multer');
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 },
+})
 
 const PORT = process.env.PORT;
 
@@ -39,25 +44,38 @@ app.get("/:dataType", (req, res) => {
     .catch(err => res.status(400).json({message: err}));
 })
 
-app.post("/:dataType", async (req, res) => {
+app.post("/:dataType", upload.single("image"), async (req, res) => {
     const dataType = req.params.dataType;
     const body = req.body;
+    console.log(body);
     const responses = [];
     const typePrefix = await knex("type_prefix").select("prefix").where({type: dataType}).first();
     const newID = generateID(typePrefix.prefix);
 
-    if (body.image) {
+    if (req.file) {
         const newImageID = generateID("IMG");
+        const imageExtensions = {
+            "image/jpeg": ".jpg",
+            "image/png": ".png",
+            "image/gif": ".gif",
+            "image/webp": ".webp",
+        };
+
+        const extension = imageExtensions[req.file.mimetype];
+        if (!extension) {
+            return res.status(400).json({ message: "Unsupported image type" });
+        }
+
         try {
             console.log(body.image);
-            await fs.writeFile(`data/images/${newImageID}`, body.image);
-            console.log("Successfully wrote file to " + `data/images/${newImageID}`);
+            await fs.writeFile(`data/images/${newImageID}${extension}`, req.file.buffer);
+            console.log("Successfully wrote file to " + `data/images/${newImageID}${extension}`);
         } catch (err) {
             console.log(err);
         }
         body.image = newImageID;
     }
-    
+
     const insertion = {
         ...body,
         id: newID,

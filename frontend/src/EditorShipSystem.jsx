@@ -2,12 +2,12 @@ import { useContext } from "react";
 import AppContext from "./AppContext";
 import EditorContext from "./EditorContext";
 
-export default function EditorAndroid() {
+export default function EditorShipSystem() {
 
     const { handleChange, formData } = useContext(EditorContext);
     const { databaseObject } = useContext(AppContext);
 
-    const typeList = databaseObject["android_type"];
+    const typeList = databaseObject["ship_system_type"];
 
     return (
         <>
@@ -19,7 +19,7 @@ export default function EditorAndroid() {
                     <option value={""}>Select type</option>
                     {typeList.map((type) => {
                         return (
-                            <option value={type.id}>{type.name}</option>
+                            <option value={type.id}>{type.name.charAt(0).toUpperCase() + type.name.slice(1)}</option>
                         )
                     })}
                 </select>

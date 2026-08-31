@@ -13,7 +13,6 @@ export default function DisplayHeader() {
                 <div className="display-header-buttons-container">
                     <div className="display-header-buttons">
                         <button className="display-header-button" onClick={() => setRefresh(true)}>Refresh Database</button>
-                        <button className="display-header-button" onClick={() => saveDatabase(databaseChanges, databaseAdditions, databaseDeletions, setRefresh)}>Save to Database</button>
                     </div>
                 </div>
             </div>

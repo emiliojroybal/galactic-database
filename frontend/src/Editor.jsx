@@ -2,12 +2,17 @@ import { useState, useContext, useEffect } from "react";
 import EditorAndroid from "./EditorAndroid";
 import EditorContext from "./EditorContext";
 import AppContext from "./AppContext";
-import crypto from 'crypto';
+import EditorFaction from "./EditorFaction";
+import EditorSpecies from "./EditorSpecies";
+import EditorCharacter from "./EditorCharacter";
+import EditorItem from "./EditorItem";
+import EditorLocation from "./EditorLocation";
+import EditorShipSystem from "./EditorShipSystem";
+import EditorShip from "./EditorShip";
 
 export default function Editor() {
 
-    const { setDatabaseChanges, currentTypeWindow, setShowNewPopup, selectedElement, databaseChanges, databaseAdditions,
-        setDatabaseAdditions, setDatabaseDeletions, databaseObject, setDatabaseObject } = useContext(AppContext);
+    const { currentTypeWindow, setShowNewPopup, selectedElement, setNewPatch, setNewPost, setNewDelete } = useContext(AppContext);
     const [ formData, setFormData ] = useState(selectedElement || {});
 
     useEffect(() => {
@@ -18,18 +23,20 @@ export default function Editor() {
         e.preventDefault();
         formData.key = currentTypeWindow;
         if (formData.id) {
-            setDatabaseChanges(prev => [...prev, formData]);
-            console.log(databaseChanges);
+            setNewPatch(formData);
         } else {
-            formData.tempID = Math.floor(Math.random() * (999999999999 - 100000000000 + 1)) + 100000000000;
-            setDatabaseAdditions(prev => [...prev, formData]);
-            console.log(databaseAdditions);
-            setShowNewPopup(false)
+            setNewPost(formData);
+            setShowNewPopup(false);
         }
     }
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    const handleDelete = (e) => {
+        formData.key = currentTypeWindow;
+        if (formData.id) setNewDelete(formData);
+    }
+
+    const handleChange = async (e) => {
+        let { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value}));
     }
 
@@ -37,9 +44,17 @@ export default function Editor() {
 
     return (
         <EditorContext.Provider value={valueObject}>
-            <form onSubmit={handleSubmit}>
+            {selectedElement ? <button className="editor-delete-button" onClick={handleDelete}>Delete</button> : ""}
+            <form className="editor" onSubmit={handleSubmit}>
                 {currentTypeWindow == "android" ? <EditorAndroid /> : ""}
-                <button type="submit">Submit</button>
+                {currentTypeWindow == "character" ? <EditorCharacter /> : ""}
+                {currentTypeWindow == "faction" ? <EditorFaction /> : ""}
+                {currentTypeWindow == "item" ? <EditorItem /> : ""}
+                {currentTypeWindow == "location" ? <EditorLocation /> : ""}
+                {currentTypeWindow == "ship" ? <EditorShip /> : ""}
+                {currentTypeWindow == "ship_system" ? <EditorShipSystem /> : ""}
+                {currentTypeWindow == "species" ? <EditorSpecies /> : ""}
+                <button className="editor-submit-button" type="submit">Submit</button>
             </form>
         </EditorContext.Provider>
     )
